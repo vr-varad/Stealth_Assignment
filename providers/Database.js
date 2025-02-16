@@ -1,11 +1,10 @@
 import { Sequelize } from 'sequelize'
+import config from '../config/config.js';
 
 
 class Database {
-    static POSTGRES_DB_URL = process.env.POSTGRES_DB_URL || 'postgres://postgres:mysecretpassword@localhost:5433/postgres'
-
-    static async init() {
-        const sequelize = new Sequelize(this.POSTGRES_DB_URL,{
+   static async init() {
+        const sequelize = new Sequelize(config.POSTGRES_DB_URL,{
             dialect: 'postgres',
         })
         try {

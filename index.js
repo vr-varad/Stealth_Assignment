@@ -1,4 +1,4 @@
-import { App } from "./providers/App.js";
+import { App } from './providers/index.js'
 
 App.loadServer();
 App.loadDatabase();
