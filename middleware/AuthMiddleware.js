@@ -1,4 +1,5 @@
 import { db } from "../providers/Database.js";
+import { UnauthorizedError } from "../utils/ErrorUtility.js";
 import { VerifyToken } from "../utils/PasswordUtility.js";
 
 export const AuthMiddleware = async (req, res, next) => {
@@ -7,9 +8,12 @@ export const AuthMiddleware = async (req, res, next) => {
         const decoded = await VerifyToken(token);
         const {id} = decoded;
         const user = await db.users.findOne({where: {id}});
+        if (!user) {
+            return next(new UnauthorizedError('Unauthorized'));
+        }
         req.userData = user;
         next();
     } catch (error) {
-        return res.status(401).send('Unauthorized');
+        return next(new UnauthorizedError('Unauthorized'));
     }
 }

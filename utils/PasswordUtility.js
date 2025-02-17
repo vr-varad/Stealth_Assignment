@@ -11,6 +11,10 @@ export const GenerateHashPassword = async (password, salt) => {
     return await bcrypt.hashSync(password, salt)
 }
 
+export const GenerateRandomPassword = async () => {
+    return await bcrypt.genSaltSync(10)
+}
+
 export const VerifyPassword = async (enteredPassword, hashedPassword) => {
     return await bcrypt.compareSync(enteredPassword, hashedPassword)
 }

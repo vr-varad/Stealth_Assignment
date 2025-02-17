@@ -1,37 +1,28 @@
 import express from 'express';
-import { db } from '../providers/Database.js';
-import { CreateUser } from '../controllers/UserController.js';
+import { CreateUser, DeleteUser, GetAllUsers, GetUserById, UpdateUser } from '../controllers/UserController.js';
 import { AuthMiddleware } from '../middleware/AuthMiddleware.js';
+import { AdminMiddleware } from '../middleware/AdminMiddleware.js';
 
-const User = db.users;
 
 class UserRoutes {
     router = express.Router();
 
-    constructor(){
+    constructor() {
         this.initialize();
     }
 
     initialize() {
         this.router.use(AuthMiddleware)
-        
-        this.router.get('/', (req, res) => {
-            res.send('get all users');
-        });
+
+        this.router.get('/', GetAllUsers);
 
         this.router.post('/', CreateUser);
-        
-        this.router.get('/:id', (req, res) => {
-            res.send('get user by id');
-        })
 
-        this.router.put('/:id', (req, res) => {
-            res.send('update user by id');
-        });
+        this.router.get('/:id', GetUserById)
 
-        this.router.delete('/:id', (req, res) => {
-            res.send('delete user by id');
-        });
+        this.router.put('/:id', AdminMiddleware, UpdateUser);
+
+        this.router.delete('/:id', DeleteUser);
     }
 }
 
