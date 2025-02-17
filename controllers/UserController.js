@@ -1,6 +1,8 @@
 
 
-export const CreateUser = async () => {}
+export const CreateUser = async (req, res, next) => {
+    res.send('create user');
+}
 
 export const GetUser = () => { }
 

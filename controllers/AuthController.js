@@ -1,6 +1,7 @@
 import { UserSignUpSchema, UserLoginSchema } from '../schema/UserSchema.js'
 import { db } from '../providers/Database.js'
 import { GenerateHashPassword, GenerateSalt, GenerateToken, VerifyPassword } from '../utils/PasswordUtility.js';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '../utils/ErrorUtility.js';
 
 const User = db.users
 
@@ -13,7 +14,7 @@ export const UserSignUp = async (req, res, next) => {
         const existingUser = await User.findOne({ where: { email } });
 
         if (existingUser) {
-            return res.status(409).send('User already exists');
+            return next(new BadRequestError('User already exists'));
         }
 
         const salt = await GenerateSalt();
@@ -29,7 +30,7 @@ export const UserSignUp = async (req, res, next) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(400).send(error.details[0].message);
+        next(new BadRequestError(error.details[0].message));
     }
 }
 
@@ -42,13 +43,13 @@ export const UserLogin = async (req, res, next) => {
         const user = await User.findOne({ where: { email } });  
 
         if (!user) {
-            return res.status(404).send('User not found');
+            return next(new NotFoundError('User not found'));
         }
 
         const isPasswordValid = await VerifyPassword(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).send('Invalid password');
+            return next(new UnauthorizedError('Invalid password'));
         }
 
         const token = await GenerateToken({ id: user.id, email: user.email });
@@ -60,6 +61,6 @@ export const UserLogin = async (req, res, next) => {
         })
     } catch (error) {
         console.log(error);
-        res.status(400).send(error.details[0].message);
+        next(new BadRequestError(error.details[0].message));
     }
 }

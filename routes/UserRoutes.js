@@ -1,6 +1,7 @@
 import express from 'express';
 import { db } from '../providers/Database.js';
 import { CreateUser } from '../controllers/UserController.js';
+import { AuthMiddleware } from '../middleware/AuthMiddleware.js';
 
 const User = db.users;
 
@@ -12,6 +13,8 @@ class UserRoutes {
     }
 
     initialize() {
+        this.router.use(AuthMiddleware)
+        
         this.router.get('/', (req, res) => {
             res.send('get all users');
         });
