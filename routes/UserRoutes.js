@@ -1,5 +1,6 @@
 import express from 'express';
 import { db } from '../providers/Database.js';
+import { CreateUser } from '../controllers/UserController.js';
 
 const User = db.users;
 
@@ -15,9 +16,7 @@ class UserRoutes {
             res.send('get all users');
         });
 
-        this.router.post('/', async(req, res) => {
-            res.send('create user');
-        });
+        this.router.post('/', CreateUser);
         
         this.router.get('/:id', (req, res) => {
             res.send('get user by id');
