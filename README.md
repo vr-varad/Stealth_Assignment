@@ -3,6 +3,10 @@
 ## Objective
 This project involves creating a RESTful API for managing users with basic CRUD operations and JWT-based authentication. The system will allow user registration, login, and admin-protected user management.
 
+## Design
+
+<img src="./assets/design.png" >
+
 ## Features
 - **User Authentication (JWT-based)**  
   - Signup
@@ -30,12 +34,12 @@ This project involves creating a RESTful API for managing users with basic CRUD 
 
 1. Clone the repository to your local machine:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/vr-varad/Stealth_Assignment
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd 
+   cd Stealth_Assignment
    ```
 
 3. Install the project dependencies:
@@ -44,6 +48,9 @@ This project involves creating a RESTful API for managing users with basic CRUD 
    ```
 
 4. Make a `.env` file similar to `.env.example`
+    ```bash
+    cp .env.example .env
+    ```
 
 5. Setup the `.env` file with your credentials:
    ```bash
