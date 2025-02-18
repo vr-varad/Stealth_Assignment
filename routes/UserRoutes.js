@@ -20,9 +20,9 @@ class UserRoutes {
 
         this.router.get('/:id', GetUserById)
 
-        this.router.put('/:id', AdminMiddleware, UpdateUser);
+        this.router.put('/:id', UpdateUser);
 
-        this.router.delete('/:id', DeleteUser);
+        this.router.delete('/:id', AdminMiddleware, DeleteUser);
     }
 }
 

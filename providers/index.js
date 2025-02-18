@@ -6,6 +6,10 @@ class App {
         Express.init();
     }
 
+    static startServer() {
+        Express.startServer();
+    }
+
     static loadDatabase() {
         Database.init()
     }

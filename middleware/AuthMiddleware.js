@@ -1,4 +1,4 @@
-import { db } from "../providers/Database.js";
+import { Database } from "../providers/Database.js";
 import { UnauthorizedError } from "../utils/ErrorUtility.js";
 import { VerifyToken } from "../utils/PasswordUtility.js";
 
@@ -7,7 +7,7 @@ export const AuthMiddleware = async (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         const decoded = await VerifyToken(token);
         const {id} = decoded;
-        const user = await db.users.findOne({where: {id}});
+        const user = await Database.db.users.findOne({where: {id}});
         if (!user) {
             return next(new UnauthorizedError('Unauthorized'));
         }

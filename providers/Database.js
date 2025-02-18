@@ -8,6 +8,7 @@ class Database {
     static async init() {
         const sequelize = new Sequelize(config.POSTGRES_DB_URL, {
             dialect: 'postgres',
+            logging: false  
         })
         try {
             await sequelize.authenticate()
@@ -25,7 +26,7 @@ class Database {
     }
 }
 
-await Database.init()
+// await Database.init()
 
 export const db = Database.db
 export {

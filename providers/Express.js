@@ -9,14 +9,17 @@ class Express {
     static init() {
         this.app.use(express.json());
         new Routes(this.app);
-        this.app.use(ErrorMiddleware)
+        this.app.use(ErrorMiddleware);
+    }
+
+    static startServer() {
         this.app.listen(config.PORT, () => {
-            console.log(`Server is running on port ${this.PORT}`);
+            console.log(`Server is running on port ${config.PORT}`);
         })
     }
 }
 
-// Express.init();
+Express.init();
 
 export const app = Express.app;
 

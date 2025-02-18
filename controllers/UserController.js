@@ -1,24 +1,23 @@
 import { CreateUserSchema, UpdateUserSchema } from "../schema/UserSchema.js"
 import { GenerateRandomPassword } from "../utils/PasswordUtility.js"
-import { db } from '../providers/Database.js'
+import { Database, db } from '../providers/Database.js'
 import { BadRequestError, NotFoundError, UnauthorizedError } from "../utils/ErrorUtility.js"
 
 const User = db.users
 
 export const CreateUser = async (req, res, next) => {
     try {
-        console.log(req.userData)
         const value = await CreateUserSchema.validateAsync(req.body)
         const { name, email, role } = value
-        if(role ===  'admin' && req.userData.role !== 'admin') {
+        if (role === 'admin' && req.userData.role !== 'admin') {
             return next(new UnauthorizedError('You are not authorized to perform this action'))
         }
-        const existingUser = await User.findOne({ where: { email } })
+        const existingUser = await Database.db.users.findOne({ where: { email } })
         if (existingUser) {
             return next(new BadRequestError('User already exists'))
         }
         const hashedPassword = await GenerateRandomPassword()
-        const user = await User.create({
+        const user = await Database.db.users.create({
             name,
             email,
             password: hashedPassword,
@@ -36,7 +35,7 @@ export const CreateUser = async (req, res, next) => {
 
 export const GetAllUsers = async (req, res, next) => {
     try {
-        const users = await User.findAll()
+        const users = await Database.db.users.findAll()
         res.status(200).json({
             message: "Users fetched",
             data: users
@@ -55,11 +54,11 @@ export const UpdateUser = async (req, res, next) => {
         }
         const value = await UpdateUserSchema.validateAsync(req.body)
         const { name, email, role } = value
-        const user = await User.findOne({ where: { id } })
+        const user = await Database.db.users.findOne({ where: { id } })
         if (!user) {
             return next(new NotFoundError('User not found'))
         }
-        await User.update({ name, email, role }, { where: { id } })
+        await Database.db.users.update({ name, email, role }, { where: { id } })
         res.status(200).json({
             message: "User updated"
         })
@@ -72,7 +71,7 @@ export const UpdateUser = async (req, res, next) => {
 export const DeleteUser = async (req, res, next) => {
     try {
         const { id } = req.params
-        const user = User.findOne({ where: { id } })
+        const user = await Database.db.users.findOne({ where: { id } })
         if (!user) {
             return next(new NotFoundError('User not found'))
         }
@@ -89,7 +88,7 @@ export const DeleteUser = async (req, res, next) => {
 export const GetUserById = async (req, res, next) => {
     try {
         const { id } = req.params
-        const user = await User.findOne({ where: { id } })
+        const user = await Database.db.users.findOne({ where: { id } })
         if (!user) {
             return next(new NotFoundError('User not found'))
         }

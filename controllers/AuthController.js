@@ -1,17 +1,17 @@
 import { UserSignUpSchema, UserLoginSchema } from '../schema/UserSchema.js'
-import { db } from '../providers/Database.js'
+import { Database } from '../providers/Database.js'
 import { GenerateHashPassword, GenerateSalt, GenerateToken, VerifyPassword } from '../utils/PasswordUtility.js';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../utils/ErrorUtility.js';
 
-const User = db.users
 
 export const UserSignUp = async (req, res, next) => {
     try {
+        
         const value = await UserSignUpSchema.validateAsync(req.body);
 
         const { name, email, password } = value;
 
-        const existingUser = await User.findOne({ where: { email } });
+        const existingUser = await Database.db.users.findOne({ where: { email } });
 
         if (existingUser) {
             return next(new BadRequestError('User already exists'));
@@ -21,7 +21,7 @@ export const UserSignUp = async (req, res, next) => {
         const hashedPassword = await GenerateHashPassword(password, salt);
 
 
-        const user = await User.create({ name, email, password: hashedPassword });
+        const user = await Database.db.users.create({ name, email, password: hashedPassword });
 
         return res.status(201).json({
             success: true,
@@ -40,7 +40,7 @@ export const UserLogin = async (req, res, next) => {
 
         const { email, password } = values;
 
-        const user = await User.findOne({ where: { email } });  
+        const user = await Database.db.users.findOne({ where: { email } });
 
         if (!user) {
             return next(new NotFoundError('User not found'));
